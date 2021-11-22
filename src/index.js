@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-const midGlb = function(req, res, next) {
+const middle = function(req, res, next) {
 
     console.log(new Date().toLocaleString())
     console.log(req.ip)
@@ -18,7 +18,7 @@ const midGlb = function(req, res, next) {
     next()
 
 }
-app.use(midGlb)
+app.use(middle)
 
 
 

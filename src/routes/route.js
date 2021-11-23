@@ -1,12 +1,16 @@
-const express = require("express");
-const router = express.Router();
-const mainMiddleware = require("../middlewares/mainMiddleware");
-const userController = require("../controllers/userController");
-const productController = require("../controllers/productController");
-const orderController = require("../controllers/orderController");
+const express = require('express');
 
-router.post("/createUsers", mainMiddleware.validateAppType, userController.createUser);
-router.post("/createProducts", productController.createProduct);
-router.post("/createOrders", mainMiddleware.validateAppType, orderController.createOrder);
+const router = express.Router();
+
+const userModel = require("../models/userModel")
+const productModel = require("../models/loginModel")
+
+const controler = require("../controllers/userController")
+const middleware = require("../middleware/middleWare")
+
+router.post('/createUser', controler.createUser);
+router.post('/login', controler.login);
+router.get('/users/:userId', middleware.tokenCheck, controler.dataById);
+router.put('/users/:userId', middleware.tokenCheck, controler.updateName);
 
 module.exports = router;

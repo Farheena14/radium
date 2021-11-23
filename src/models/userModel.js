@@ -1,16 +1,27 @@
-const mongoose = require("mongoose");
-const ObjectId = mongoose.Schema.Types.ObjectId;
+const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
-    name: String,
-    balance: { type: Number, default: 100 },
-    address: String,
-    age: Number,
-    gender: {
+    name: {
         type: String,
-        enum: ["female", "male", "other"],
+        required: true
     },
-    freeAppUser: { type: Boolean, default: false },
-}, { timestamps: true });
+    mobile: {
+        type: Number,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
+    }
+}, { timestamps: true })
 
-module.exports = mongoose.model("myUser", userSchema);
+module.exports = mongoose.model('user_Mir', userSchema)

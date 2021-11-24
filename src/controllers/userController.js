@@ -14,7 +14,7 @@ const login = async function(req, res) {
     let check = await userModel.findOne({ password: req.body.password, email: req.body.email, isDeleted: false })
     if (check) {
         let payload = { _id: check._id }
-        let token = jwt.sign(payload, 'mirIrshad')
+        let token = jwt.sign(payload, 'RadiumSecret')
         res.send({ "msg": "true", "data": check, "tokendetail": token })
     } else {
         res.send({ "msg": "false" })

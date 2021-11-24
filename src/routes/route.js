@@ -11,6 +11,6 @@ const middleware = require("../middleware/middleWare")
 router.post('/createUser', controler.createUser);
 router.post('/login', controler.login);
 router.get('/users/:userId', middleware.tokenCheck, controler.dataById);
-router.put('/users/:userId', middleware.tokenCheck, controler.updateName);
+router.put('/users/:userId', middleware.tokenCheck, controler.updateEmail);
 
 module.exports = router;

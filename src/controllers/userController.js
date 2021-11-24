@@ -14,7 +14,7 @@ const login = async function(req, res) {
     let check = await userModel.findOne({ password: req.body.password, email: req.body.email, isDeleted: false })
     if (check) {
         let payload = { _id: check._id }
-        let token = jwt.sign(payload, 'mirIrshad')
+        let token = jwt.sign(payload, 'RadiumSecret')
         res.send({ "msg": "true", "data": check, "tokendetail": token })
     } else {
         res.send({ "msg": "false" })
@@ -38,15 +38,17 @@ const dataById = async function(req, res) {
 
 }
 
-const updateName = async function(req, res) {
+const updateEmail = async function(req, res) {
     let userId = req.params.userId
     let tokenUserid = req.body.validToken._id
     if (tokenUserid == userId) {
         let check = await userModel.findById(userId)
-        let newName = req.body.name
+        let newEmail = req.body.email
         if (check) {
-            await userModel.findOneAndUpdate({ _id: userId, name: newName })
-            res.send({ status: "updated", data: { check } })
+            await userModel.findOneAndUpdate({ _id: userId }, { $set: { email: newEmail } })
+
+            res.send({ status: "updatedEmail", data: { check } })
+            console.log(req.body.email)
         } else {
             res.send({ "msg": "#error-response-structure" })
         }
@@ -66,4 +68,4 @@ const updateName = async function(req, res) {
 module.exports.createUser = createUser
 module.exports.login = login
 module.exports.dataById = dataById
-module.exports.updateName = updateName
+module.exports.updateEmail = updateEmail

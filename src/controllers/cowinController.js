@@ -28,8 +28,6 @@ The above has to be done in one single API and not multiple seperate API’s. SO
 const axios = require("axios");
 const coinsModel = require("../models/coinsModel.js");
 
-// res.status(200). send( { data: userDetails } )
-
 /*const getCoins = async function(req, res) {
     try {
 
@@ -44,9 +42,7 @@ const coinsModel = require("../models/coinsModel.js");
         };
 
         const coins = await axios(options);
-        //  let savedData = await coinsModel.create(data)
-
-
+        
 
         console.log("WORKING");
         let cyprtoCoins = coins.data;
@@ -99,4 +95,3 @@ const getCoins = async function(req, res) {
 };
 
 module.exports.getCoins = getCoins;
-//module.exports.getRanking=getRanking

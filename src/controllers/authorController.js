@@ -113,7 +113,8 @@ const getBlog = async function(req, res) {
 //4th solution
 const updateBlog = async function(req, res) {
     try {
-        let authorId = req.params.authorId;
+        let authorId = req.body.authorId;
+        console.log(authorId);
         if (req.validToken == authorId) {
             let blogId = req.params.blogId;
             let newTitle = req.body.title;
@@ -121,16 +122,16 @@ const updateBlog = async function(req, res) {
             let newTags = req.body.tags;
             let newSubcategory = req.body.subcategory;
             let today = Date();
-            let data = await blogModel.findById({ _id: blogId });
+            let data = await blogModel.findById(blogId);
             if (data.isDeleted == false && data) {
-
+                console.log(data);
                 let dataUpdate = await blogModel.findOneAndUpdate({ _id: blogId }, {
                     title: newTitle,
                     body: newBody,
                     $push: { tags: newTags },
                     $push: { subcategory: newSubcategory },
                     publishedAt: new Date(),
-                    isPublished: true,
+                    isPublished: true
 
                 }, { new: true });
                 console.log(data);
@@ -147,7 +148,7 @@ const updateBlog = async function(req, res) {
 
 const deleteblog = async function(req, res) {
     try {
-        let authorId = req.params.authorId;
+        let authorId = req.body.authorId;
         if (req.validToken == authorId) {
             let Bid = req.params.blogId;
             console.log(Bid);

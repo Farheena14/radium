@@ -16,7 +16,7 @@ router.post('/createblog', middle.middleware, accountcontroller.getcreateblog)
 router.get('/blogs', accountcontroller.getBlog)
 
 //FOURTH API
-router.put('/blogs/:blogId', accountcontroller.updateBlog)
+router.put('/blogs/:blogId', middle.middleware, accountcontroller.updateBlog)
 
 //FIFTH API
 router.delete('/blogs/:blogId', middle.middleware, accountcontroller.deleteblog)

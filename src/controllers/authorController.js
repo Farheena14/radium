@@ -1,8 +1,8 @@
 const authorModel = require("../model/authorModel");
 const blogModel = require("../model/blogModel");
 
-const jwt = require('jsonwebtoken')
-    // FIRST API CREATE AUTHOR
+const jwt = require("jsonwebtoken");
+// FIRST API CREATE AUTHOR
 const getcreateauthor = async function(req, res) {
     try {
         let data = req.body;
@@ -16,28 +16,33 @@ const getcreateauthor = async function(req, res) {
     }
 };
 
-module.exports.getcreateauthor = getcreateauthor;
+
 
 // SECOND API BLOG MODEL CREATE
 const getcreateblog = async function(req, res) {
-    const blog = req.body;
-    const authorId = req.body.authorId;
-    const abc = await authorModel.findById(authorId);
+    try {
+        const blog = req.body;
+        const authorId = req.body.authorId;
+        const abc = await authorModel.findById(authorId);
 
-    if (abc) {
-        let savedBlog = await blogModel.create(blog);
-        res.status(200).send({
-            status: true,
-            data: { savedBlog },
-        });
-    } else {
-        res.status(400).send({
-            status: false,
-            msg: "AUTHOR ID IS NOT VALID",
-        });
+        if (abc) {
+            let savedBlog = await blogModel.create(blog);
+            res.status(200).send({
+                status: true,
+                data: { savedBlog },
+            });
+        } else {
+            res.status(400).send({
+                status: false,
+                msg: "AUTHOR ID IS NOT VALID",
+            });
+        }
+    } catch (err) {
+        res.status(400).send({ status: false, msg: "No author found" });
     }
 };
-module.exports.getcreateblog = getcreateblog;
+
+
 /*
 // THIRD API
 const getblogs = async function(req, res) {
@@ -104,55 +109,65 @@ const getBlog = async function(req, res) {
     }
 };
 
-module.exports.getBlog = getBlog;
+
 //4th solution
 const updateBlog = async function(req, res) {
     try {
-        let blogId = req.params.blogId;
-        let newTitle = req.body.title;
-        let newBody = req.body.body;
-        let newTags = req.body.tags;
-        let newSubcategory = req.body.subcategory;
-        let today = Date();
-        let data = await blogModel.findById({ _id: blogId });
-        console.log(blogId);
-        if (data.isDeleted == false && data) {
-            let dataUpdate = await blogModel.findOneAndUpdate({ _id: blogId }, {
-                title: newTitle,
-                body: newBody,
-                tags: newTags,
-                subCategory: newSubcategory,
-                publishedAt: new Date(),
-                isPublished: true,
-            }, { new: true });
-            console.log(data);
-            res.status(200).send({ msg: "updated successfully", data: dataUpdate });
-        } else {
-            res.status(404).send({ msg: "data not found" });
+        let authorId = req.params.authorId;
+        if (req.validToken == authorId) {
+            let blogId = req.params.blogId;
+            let newTitle = req.body.title;
+            let newBody = req.body.body;
+            let newTags = req.body.tags;
+            let newSubcategory = req.body.subcategory;
+            let today = Date();
+            let data = await blogModel.findById({ _id: blogId });
+            if (data.isDeleted == false && data) {
+
+                let dataUpdate = await blogModel.findOneAndUpdate({ _id: blogId }, {
+                    title: newTitle,
+                    body: newBody,
+                    $push: { tags: newTags },
+                    $push: { subcategory: newSubcategory },
+                    publishedAt: new Date(),
+                    isPublished: true,
+
+                }, { new: true });
+                console.log(data);
+                res.status(200).send({ msg: "updated successfully", data: dataUpdate });
+            }
         }
     } catch (error) {
         console.log(error);
-        res.status(500).send({ status: false, msg: "error-response-status" });
+        res.status(404).send({ status: false, msg: "error-response-status" });
     }
 };
 
 //FIFTH API FIND AND UPDATE
 
 const deleteblog = async function(req, res) {
-    let Bid = req.params.blogId;
-    console.log(Bid);
-    let checkid = await blogModel.findById(Bid);
-    console.log(checkid);
-    if (checkid) {
-        let z = await blogModel.findOneAndUpdate({ _id: Bid }, { $set: { isDeleted: true } });
-        let a = await blogModel.findById(Bid);
-        console.log(a);
-        res.status(200).send();
-    } else {
+    try {
+        let authorId = req.params.authorId;
+        if (req.validToken == authorId) {
+            let Bid = req.params.blogId;
+            console.log(Bid);
+            let checkid = await blogModel.findById(Bid);
+            console.log(checkid);
+            if (checkid) {
+                let z = await blogModel.findOneAndUpdate({ _id: Bid }, { $set: { isDeleted: true } });
+                let a = await blogModel.findById(Bid);
+                console.log(a);
+                res.status(200).send();
+
+            }
+        }
+    } catch (err) {
         res.status(404).send({ status: false, msg: "blogId doesn't exist" });
     }
-};
 
+}
+
+//
 /*
     // DELETE / blogs /: blogId
     const deleteblog = async function(req, res) {
@@ -205,54 +220,48 @@ const deleteupdateblog = async function(req, res) {
         res.status(400).send({ status: false, msg: error });
     }
 };
-
+module.exports.getcreateauthor = getcreateauthor;
+module.exports.getcreateblog = getcreateblog;
+module.exports.getBlog = getBlog;
 module.exports.updateBlog = updateBlog;
 module.exports.deleteblog = deleteblog;
 module.exports.deleteupdateblog = deleteupdateblog;
 
-
-
-
-
-
-
-// PHASE 2--------FIRST API------FOR LOGIN 
+// PHASE 2--------FIRST API------FOR LOGIN
 //Allow an author to login with their email and password. On a successful login attempt return a JWT token contatining the authorId
 //If the credentials are incorrect return a suitable error message with a valid HTTP status code
 
-
 const userlogin = async function(req, res) {
-
-    if (req.body && req.body.email && req.body.password) {
-        let user = await authorModel.findOne({ email: req.body.email, password: req.body.password, isdeleted: false })
-        if (user) {
-
-            let payload = { _id: user._id }
-            let token = jwt.sign(payload, 'my secret key')
-            res.header('x-api-key', token)
-            res.send({ status: true, data: user._id, token: token })
-        } else {
-            res.send({ msg: "user name and password not found" })
+    try {
+        if (req.body && req.body.email && req.body.password) {
+            let user = await authorModel.findOne({
+                email: req.body.email,
+                password: req.body.password,
+                isdeleted: false,
+            });
+            if (user) {
+                let payload = { _id: user._id };
+                let token = jwt.sign(payload, "my secret key");
+                res.header("x-api-key", token);
+                res.send({ status: true, data: user._id, token: token });
+            }
         }
-    } else {
-
-        res.send({ msg: "details not found" })
-
+    } catch (error) {
+        res.send({ msg: "user name and password not found" });
     }
+};
 
-}
-module.exports.userlogin = userlogin
+module.exports.userlogin = userlogin;
 
-// PHASE 2--------SECOND API------FOR LOGIN VERIFY 
+// PHASE 2--------SECOND API------FOR LOGIN VERIFY
 const getuserdetail = async function(req, res) {
-    let identity = req.params.userid
-    let detail = await authorModel.findOne({ _id: identity, isdeleted: false })
+    let identity = req.params.userid;
+    let detail = await authorModel.findOne({ _id: identity, isdeleted: false });
     if (detail) {
-        res.send({ status: true, data: detail })
+        res.send({ status: true, data: detail });
     } else {
-        res.send({ status: false, data: "user not found" })
+        res.send({ status: false, data: "user not found" });
     }
-}
-
+};
 
 module.exports.getuserdetail = getuserdetail

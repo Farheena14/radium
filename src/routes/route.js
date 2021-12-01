@@ -10,7 +10,7 @@ const middle = require('../middleware/middleware');
 router.post('/createauthor', accountcontroller.getcreateauthor)
 
 // SECOND API
-router.post('/createblog', accountcontroller.getcreateblog)
+router.post('/createblog', middle.middleware, accountcontroller.getcreateblog)
 
 // THIRD API
 router.get('/blogs', accountcontroller.getBlog)
@@ -19,11 +19,11 @@ router.get('/blogs', accountcontroller.getBlog)
 router.put('/blogs/:blogId', accountcontroller.updateBlog)
 
 //FIFTH API
-router.delete('/blogs/:blogId', accountcontroller.deleteblog)
+router.delete('/blogs/:blogId', middle.middleware, accountcontroller.deleteblog)
 
 //SIXTH API
 
-router.delete('/blogs', accountcontroller.deleteupdateblog)
+router.delete('/blogs', middle.middleware, accountcontroller.deleteupdateblog)
 
 //Phase 2
 router.post('/login', accountcontroller.userlogin)

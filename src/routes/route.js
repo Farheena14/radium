@@ -28,6 +28,6 @@ router.post('/login', accountcontroller.userlogin)
 
 // PHASE 2 SECOND API
 
-router.get('/userdetail/:userid', middle.middleware, accountcontroller.getuserdetail)
+//router.get('/userdetail/:userid', middle.middleware, accountcontroller.getuserdetail)
 
 module.exports = router

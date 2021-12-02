@@ -233,7 +233,7 @@ const userlogin = async function (req, res) {
 
 module.exports.userlogin = userlogin
 
-
+/*
 // PHASE 2--------SECOND API------FOR LOGIN VERIFY 
 const getuserdetail = async function (req, res) {
     try {
@@ -250,6 +250,7 @@ const getuserdetail = async function (req, res) {
 
 
 module.exports.getuserdetail = getuserdetail
+*/
 
 
 

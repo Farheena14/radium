@@ -30,7 +30,7 @@ const createUrl = async function(req, res) {
             res.status(400).send("No Url Found...!!")
         }
 
-        const longUrl = req.body.longUrl;
+        const longUrl = req.body.longUrl.trim();
         console.log(longUrl)
 
 

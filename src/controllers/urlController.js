@@ -9,7 +9,7 @@ const { promisify } = require("util");
 // Connect to redis
 const redisClient = redis.createClient(16191, "redis-16191.c264.ap-south-1-1.ec2.cloud.redislabs.com", { no_ready_check: true });
 
-//O0qgthX3x2oqCLz18TzoDCauyozlbC97
+
 redisClient.auth("BVs8bdhAnibuzPEi1RaRgUoccET2ymPZ", function(err) {
     if (err) throw err;
 });
@@ -138,10 +138,10 @@ const getUrl = async function(req, res) {
                 return res.redirect(urlFind.longUrl)
 
             } else {
-                res.status(400).send("There is No Short Url Found")
+                res.status(400).send({ status: false, message: "There is No Short Url Found" })
             }
         } else {
-            return res.status(404).send("No Url Code Params Found")
+            return res.status(404).send({ status: false, message: "No Url Code Params Found" })
         }
 
 
